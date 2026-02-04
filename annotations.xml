@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<annotations>
+  <version>1.1</version>
+  <meta>
+    <task>
+      <id>1980803</id>
+      <name>passport_template_v1_clean</name>
+      <size>1</size>
+      <mode>annotation</mode>
+      <overlap>0</overlap>
+      <bugtracker></bugtracker>
+      <created>2026-01-29 11:21:19.923579+00:00</created>
+      <updated>2026-01-30 08:12:20.441942+00:00</updated>
+      <subset>default</subset>
+      <start_frame>0</start_frame>
+      <stop_frame>0</stop_frame>
+      <frame_filter></frame_filter>
+      <segments>
+        <segment>
+          <id>3550788</id>
+          <start>0</start>
+          <stop>0</stop>
+          <url>https://app.cvat.ai/api/jobs/3549892</url>
+        </segment>
+      </segments>
+      <owner>
+        <username>vasonov04</username>
+        <email>vasonov04@gmail.com</email>
+      </owner>
+      <assignee></assignee>
+      <labels>
+        <label>
+          <name>surname</name>
+          <color>#5a867c</color>
+          <type>rectangle</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>name</name>
+          <color>#c47df8</color>
+          <type>rectangle</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>patronymic</name>
+          <color>#561775</color>
+          <type>rectangle</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>issued_by</name>
+          <color>#02922f</color>
+          <type>rectangle</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>issue_date</name>
+          <color>#b3b89c</color>
+          <type>rectangle</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>department_code</name>
+          <color>#553af3</color>
+          <type>rectangle</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>sex</name>
+          <color>#f20128</color>
+          <type>rectangle</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>birth_date</name>
+          <color>#8d392b</color>
+          <type>rectangle</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>birth_place</name>
+          <color>#68fb79</color>
+          <type>rectangle</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>passport_series</name>
+          <color>#5aeea5</color>
+          <type>rectangle</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>passport_number</name>
+          <color>#cafb2e</color>
+          <type>rectangle</type>
+          <attributes>
+          </attributes>
+        </label>
+      </labels>
+    </task>
+    <dumped>2026-01-30 08:13:45.645155+00:00</dumped>
+  </meta>
+  <image id="0" name="Слой 1.png" width="960" height="1280">
+    <box label="issued_by" source="manual" occluded="0" xtl="259.17" ytl="246.46" xbr="681.23" ybr="278.38" rotation="356.30" z_order="0">
+    </box>
+    <box label="issue_date" source="manual" occluded="0" xtl="247.13" ytl="382.00" xbr="360.18" ybr="414.04" rotation="357.90" z_order="0">
+    </box>
+    <box label="department_code" source="manual" occluded="0" xtl="518.20" ytl="359.43" xbr="727.35" ybr="395.60" rotation="357.70" z_order="0">
+    </box>
+    <box label="passport_series" source="manual" occluded="0" xtl="801.09" ytl="268.89" xbr="831.71" ybr="391.38" rotation="2.80" z_order="0">
+    </box>
+    <box label="passport_series" source="manual" occluded="0" xtl="796.04" ytl="761.85" xbr="835.72" ybr="859.83" rotation="352.70" z_order="0">
+    </box>
+    <box label="passport_number" source="manual" occluded="0" xtl="791.46" ytl="418.88" xbr="825.39" ybr="518.97" rotation="3.80" z_order="0">
+    </box>
+    <box label="passport_number" source="manual" occluded="0" xtl="810.40" ytl="863.77" xbr="849.61" ybr="987.49" rotation="353.00" z_order="0">
+    </box>
+    <box label="surname" source="manual" occluded="0" xtl="446.92" ytl="725.38" xbr="719.42" ybr="757.99" rotation="357.70" z_order="0">
+    </box>
+    <box label="name" source="manual" occluded="0" xtl="424.80" ytl="791.18" xbr="777.98" ybr="825.18" rotation="357.90" z_order="0">
+    </box>
+    <box label="patronymic" source="manual" occluded="0" xtl="445.97" ytl="828.10" xbr="770.46" ybr="858.45" rotation="358.30" z_order="0">
+    </box>
+    <box label="sex" source="manual" occluded="0" xtl="417.58" ytl="870.96" xbr="482.12" ybr="901.48" z_order="0">
+    </box>
+    <box label="birth_date" source="manual" occluded="0" xtl="550.24" ytl="860.20" xbr="765.37" ybr="894.26" rotation="357.70" z_order="0">
+    </box>
+    <box label="birth_place" source="manual" occluded="0" xtl="441.51" ytl="899.68" xbr="769.58" ybr="933.93" rotation="356.70" z_order="0">
+    </box>
+  </image>
+</annotations>

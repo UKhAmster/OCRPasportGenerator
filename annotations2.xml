@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<annotations>
+  <version>1.1</version>
+  <meta>
+    <job>
+      <id>3609050</id>
+      <size>1</size>
+      <mode>annotation</mode>
+      <overlap>0</overlap>
+      <bugtracker></bugtracker>
+      <created>2026-02-11 10:17:59.013957+00:00</created>
+      <updated>2026-02-11 10:53:57.121142+00:00</updated>
+      <subset>default</subset>
+      <start_frame>0</start_frame>
+      <stop_frame>0</stop_frame>
+      <frame_filter></frame_filter>
+      <segments>
+        <segment>
+          <id>3609145</id>
+          <start>0</start>
+          <stop>0</stop>
+          <url>https://app.cvat.ai/api/jobs/3609050/dataset/export/api/jobs/3609050</url>
+        </segment>
+      </segments>
+      <owner>
+        <username>vasonov04</username>
+        <email>vasonov04@gmail.com</email>
+      </owner>
+      <assignee></assignee>
+      <labels>
+        <label>
+          <name>FirstName</name>
+          <color>#4f6883</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>Surname&amp;patronymic</name>
+          <color>#5a867c</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>birthDate</name>
+          <color>#c12813</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>birthPlace</name>
+          <color>#6e329a</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>yearofregistration</name>
+          <color>#6062c6</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>monthofregistration</name>
+          <color>#f73a9b</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>dayofregistration</name>
+          <color>#ec2978</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>numberofcertificate</name>
+          <color>#530fd6</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>FathersFirstname</name>
+          <color>#e10360</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>FathersSurname</name>
+          <color>#b26aec</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>cityzenship</name>
+          <color>#bc0bfa</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>nationality</name>
+          <color>#9c9ec5</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>MothersFirstname</name>
+          <color>#94df9e</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>MothersSurname&amp;patronymic</name>
+          <color>#ab7cd6</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>mothersnationality</name>
+          <color>#bac23d</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>placeofGovRegistration</name>
+          <color>#58a10f</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>dateOfissuance</name>
+          <color>#d605ab</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>monthOfissuence</name>
+          <color>#67e8e7</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>yearOfissuence</name>
+          <color>#6f4fe4</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>birthdate(bylettersDay&amp;Month)</name>
+          <color>#5b00b0</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>birthdate(bylettersyear)</name>
+          <color>#21ede1</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>birthPlace(region)</name>
+          <color>#8120c2</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>birthplace(country)</name>
+          <color>#3bfaf2</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+      </labels>
+    </job>
+    <dumped>2026-02-11 10:54:54.759553+00:00</dumped>
+  </meta>
+  <image id="0" name="1670237581_grizly_club_p_shablon_svidetelstvo_o_rozhdenii_1-2.png" width="840" height="1024">
+    <polygon label="FirstName" source="manual" occluded="0" points="95.82,282.35;97.20,307.90;743.60,305.10;742.20,280.93" z_order="0">
+    </polygon>
+    <polygon label="Surname&amp;patronymic" source="manual" occluded="0" points="95.90,310.65;94.68,335.21;746.65,333.98;746.65,309.42" z_order="0">
+    </polygon>
+    <polygon label="birthDate" source="manual" occluded="0" points="200.30,338.90;202.72,363.45;745.42,362.22;744.19,336.43" z_order="0">
+    </polygon>
+    <polygon label="birthdate(bylettersDay&amp;Month)" source="manual" occluded="0" points="91.00,378.20;92.20,401.50;745.40,400.20;744.20,375.70" z_order="0">
+    </polygon>
+    <polygon label="birthdate(bylettersyear)" source="manual" occluded="0" points="93.45,406.42;94.70,429.70;741.70,427.30;741.70,405.20" z_order="0">
+    </polygon>
+    <polygon label="birthPlace" source="manual" occluded="0" points="227.28,430.98;226.05,457.99;739.28,455.53;736.82,430.98" z_order="0">
+    </polygon>
+    <polygon label="birthPlace(region)" source="manual" occluded="0" points="97.80,463.70;96.70,487.10;743.00,483.90;738.80,460.50" z_order="0">
+    </polygon>
+    <polygon label="birthplace(country)" source="manual" occluded="0" points="104.20,492.40;104.20,519.90;745.13,514.64;743.00,489.20" z_order="0">
+    </polygon>
+    <polygon label="yearofregistration" source="manual" occluded="0" points="144.50,519.95;145.60,543.30;296.25,543.29;296.25,522.07" z_order="0">
+    </polygon>
+    <polygon label="monthofregistration" source="manual" occluded="0" points="344.00,519.95;341.88,541.17;530.77,543.29;529.71,519.95" z_order="0">
+    </polygon>
+    <polygon label="dayofregistration" source="manual" occluded="0" points="600.81,519.95;602.93,544.36;702.68,544.36;702.68,519.95" z_order="0">
+    </polygon>
+    <polygon label="numberofcertificate" source="manual" occluded="0" points="404.49,547.54;403.43,567.70;526.53,569.82;526.53,547.54" z_order="0">
+    </polygon>
+    <polygon label="FathersFirstname" source="manual" occluded="0" points="141.30,582.60;144.50,601.60;748.30,600.60;748.30,580.50" z_order="0">
+    </polygon>
+    <polygon label="FathersSurname" source="manual" occluded="0" points="94.60,611.20;96.80,631.40;753.60,630.30;752.60,610.10" z_order="0">
+    </polygon>
+    <polygon label="cityzenship" source="manual" occluded="0" points="96.75,640.92;96.75,660.02;748.31,658.96;748.31,640.92" z_order="0">
+    </polygon>
+    <polygon label="nationality" source="manual" occluded="0" points="101.00,666.39;98.87,689.74;741.95,687.62;744.07,663.21" z_order="0">
+    </polygon>
+    <polygon label="MothersFirstname" source="manual" occluded="0" points="141.30,699.30;140.26,718.39;747.25,718.39;745.13,698.23" z_order="0">
+    </polygon>
+    <polygon label="MothersSurname&amp;patronymic" source="manual" occluded="0" points="106.30,726.90;102.06,747.04;743.01,747.04;741.95,727.94" z_order="0">
+    </polygon>
+    <polygon label="cityzenship" source="manual" occluded="0" points="105.24,754.47;101.00,775.69;736.64,774.63;736.64,754.47" z_order="0">
+    </polygon>
+    <polygon label="mothersnationality" source="manual" occluded="0" points="112.67,783.12;108.42,805.41;705.87,804.34;707.99,781.00" z_order="0">
+    </polygon>
+    <polygon label="placeofGovRegistration" source="manual" occluded="0" points="384.33,811.77;382.21,831.94;96.75,835.12;95.70,888.20;754.70,886.10;750.44,808.59" z_order="0">
+    </polygon>
+    <polygon label="dateOfissuance" source="manual" occluded="0" points="356.80,912.60;355.60,933.80;388.60,933.80;385.40,913.60" z_order="0">
+    </polygon>
+    <polygon label="monthOfissuence" source="manual" occluded="0" points="422.50,909.40;416.17,933.81;651.70,933.80;646.40,912.60" z_order="0">
+    </polygon>
+    <polygon label="yearOfissuence" source="manual" occluded="0" points="680.40,911.50;681.46,932.75;740.89,931.69;737.70,911.50" z_order="0">
+    </polygon>
+  </image>
+</annotations>

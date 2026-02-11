@@ -4,7 +4,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bbbe8ea0-8c1e-4124-9779-14538ca9d6de" name="Changes" comment="" />
+    <list default="true" id="bbbe8ea0-8c1e-4124-9779-14538ca9d6de" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/annotations1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/annotations2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/BadScript-Regular.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/Caveat-Bold.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/Caveat-Medium.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/Caveat-Regular.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/Caveat-SemiBold.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/Caveat-VariableFont_wght.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/Lemon Tuesday.otf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/MarckScript-Regular.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/Propisi Cyr Lat_2.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/eskal_font4you.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gen2_birth_certificates.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handwritten.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/img_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/xmlexporter.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/xmlexporter.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen1_passports.py" beforeDir="false" afterPath="$PROJECT_DIR$/gen1_passports.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generated/FIXED_1769775125.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/generated/FIXED_1769775245.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/generated/fit_bbox_1769773565.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/generated/fit_bbox_1769773657.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/generated/fit_bbox_1769773790.png" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,9 +43,28 @@
       </list>
     </option>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
-}]]></component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;UKhAmster&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/UKhAmster/OCRPasportGenerator.git&quot;,
+    &quot;accountId&quot;: &quot;668a3ce7-ba36-4507-8e0c-66669863c150&quot;
+  }
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="38yAlXu3wD17hXSgAPbSIQLmoPZ" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -30,13 +75,30 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.export_passports.executor": "Run",
     "Python.gen1_passports.executor": "Run",
+    "Python.gen2_birth_certificates.executor": "Run",
+    "Python.handwritten.executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "last_opened_file_path": "C:/Users/DEV1/PycharmProjects/xmlexporter"
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "ai.playground.ignore.import.keys.banner.in.settings": "true",
+    "com.google.cloudcode.ide_session_index": "20260211_0001",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "/home/dev/PycharmProjects/OCRPasportGenerator",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/fonts" />
       <recent name="C:\Users\DEV1\PycharmProjects\xmlexporter" />
       <recent name="C:\Users\DEV1\PycharmProjects\xmlexporter\.venv" />
     </key>
@@ -44,7 +106,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-7e47963ff851-f0eec537fc84-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.23892.515" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-PY-253.30387.173" />
+        <option value="bundled-python-sdk-4762d8aabb82-6d6dccd035ac-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.30387.173" />
       </set>
     </attachedChunks>
   </component>
@@ -55,7 +118,18 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1769761588255</updated>
+      <workItem from="1770796982799" duration="8000" />
+      <workItem from="1770796998101" duration="444000" />
+      <workItem from="1770797459623" duration="4051000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/OCRPasportGenerator$gen1_passports.coverage" NAME="gen1_passports Coverage Results" MODIFIED="1770798919700" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/OCRPasportGenerator$gen2_birth_certificates.coverage" NAME="gen2_birth_certificates Coverage Results" MODIFIED="1770808364264" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/OCRPasportGenerator$handwritten.coverage" NAME="handwritten Coverage Results" MODIFIED="1770803247026" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

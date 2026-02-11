@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<annotations>
+  <version>1.1</version>
+  <meta>
+    <job>
+      <id>3580222</id>
+      <size>1</size>
+      <mode>annotation</mode>
+      <overlap>0</overlap>
+      <bugtracker></bugtracker>
+      <created>2026-02-05 11:16:28.640870+00:00</created>
+      <updated>2026-02-11 08:19:59.741945+00:00</updated>
+      <subset>default</subset>
+      <start_frame>0</start_frame>
+      <stop_frame>0</stop_frame>
+      <frame_filter></frame_filter>
+      <segments>
+        <segment>
+          <id>3580953</id>
+          <start>0</start>
+          <stop>0</stop>
+          <url>https://app.cvat.ai/api/jobs/3580222/dataset/export/api/jobs/3580222</url>
+        </segment>
+      </segments>
+      <owner>
+        <username>vasonov04</username>
+        <email>vasonov04@gmail.com</email>
+      </owner>
+      <assignee></assignee>
+      <labels>
+        <label>
+          <name>Region</name>
+          <color>#1db7fa</color>
+          <type>rectangle</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>District</name>
+          <color>#a27cf3</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>city</name>
+          <color>#0c17cc</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>street</name>
+          <color>#8344a1</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>house_number</name>
+          <color>#dc0b5a</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>stroenie</name>
+          <color>#5b1d76</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>korpus</name>
+          <color>#f5faef</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+        <label>
+          <name>apart_nmb</name>
+          <color>#b74b22</color>
+          <type>polygon</type>
+          <attributes>
+          </attributes>
+        </label>
+      </labels>
+    </job>
+    <dumped>2026-02-11 08:20:18.335716+00:00</dumped>
+  </meta>
+  <image id="0" name="shablon.png" width="1024" height="687">
+    <polygon label="District" source="manual" occluded="0" points="610.70,140.20;610.20,158.60;939.70,154.70;939.50,137.50;801.70,138.50" z_order="0">
+    </polygon>
+    <box label="Region" source="manual" occluded="0" xtl="617.13" ytl="113.74" xbr="945.28" ybr="135.83" rotation="358.80" z_order="0">
+    </box>
+    <polygon label="city" source="manual" occluded="0" points="629.20,160.80;622.70,178.10;943.10,175.20;935.90,158.20;773.27,160.65" z_order="0">
+    </polygon>
+    <polygon label="street" source="manual" occluded="0" points="619.80,180.80;614.30,198.40;945.00,194.70;938.80,178.30;775.00,179.60" z_order="0">
+    </polygon>
+    <polygon label="house_number" source="manual" occluded="0" points="625.10,200.80;622.90,216.40;673.21,217.42;668.30,200.00" z_order="0">
+    </polygon>
+    <polygon label="korpus" source="manual" occluded="0" points="731.60,202.00;731.90,217.42;780.97,217.42;780.00,200.60" z_order="0">
+    </polygon>
+    <polygon label="stroenie" source="manual" occluded="0" points="821.10,199.60;819.46,217.42;866.60,217.42;861.80,199.10" z_order="0">
+    </polygon>
+    <polygon label="apart_nmb" source="manual" occluded="0" points="896.90,199.10;897.40,215.50;948.60,215.20;947.70,198.10" z_order="0">
+    </polygon>
+  </image>
+</annotations>

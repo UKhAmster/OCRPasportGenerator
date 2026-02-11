@@ -1,153 +1,228 @@
-from faker import Faker
-import random
-from PIL import Image, ImageDraw, ImageFont
 import os
-import re
-from datetime import datetime, timedelta
-import math
+import random
+import argparse
+import xml.etree.ElementTree as ET
+from datetime import datetime
+from PIL import Image, ImageDraw, ImageFont
+from faker import Faker
 
-male_patronymics = ['Иванович', 'Петрович', 'Сергеевич', 'Александрович', 'Михайлович']
-female_patronymics = ['Ивановна', 'Петровна', 'Сергеевна', 'Александровна', 'Михайловна']
-
+# Настройка Faker
 fake = Faker('ru_RU')
+
+male_patronymics = ['Иванович', 'Петрович', 'Сергеевич', 'Александрович', 'Михайлович', 'Дмитриевич']
+female_patronymics = ['Ивановна', 'Петровна', 'Сергеевна', 'Александровна', 'Михайловна', 'Дмитриевна']
 
 
 def parse_cvat_xml(xml_path):
-    """Парсит bbox + rotation"""
-    with open(xml_path, 'r', encoding='utf-8') as f:
-        content = f.read()
+    """
+    Парсит XML от CVAT в формате Image 1.1 (теги <image> и <box>).
+    """
+    if not os.path.exists(xml_path):
+        raise FileNotFoundError(f"Файл разметки не найден: {xml_path}")
+
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
 
     boxes = {}
-    # С rotation
-    pattern = r'<box\s+label="([^"]+)"[^>]*xtl="([^"]+)"\s+ytl="([^"]+)"\s+xbr="([^"]+)"\s+ybr="([^"]+)"[^>]*rotation="([^"]+)"'
-    matches = re.findall(pattern, content, re.IGNORECASE)
 
-    for label, xtl, ytl, xbr, ybr, rot in matches:
-        boxes.setdefault(label, []).append({
-            'xtl': float(xtl), 'ytl': float(ytl),
-            'xbr': float(xbr), 'ybr': float(ybr),
-            'rot': float(rot),
-            'cx': (float(xtl) + float(xbr)) / 2,
-            'cy': (float(ytl) + float(ybr)) / 2
-        })
+    # Ищем image, затем внутри box
+    for image in root.findall("image"):
+        for box in image.findall("box"):
+            label_name = box.get("label")
 
-    print("📦 Boxes с поворотом:", list(boxes.keys()))
+            xtl = float(box.get("xtl"))
+            ytl = float(box.get("ytl"))
+            xbr = float(box.get("xbr"))
+            ybr = float(box.get("ybr"))
+            rotation = float(box.get("rotation", "0"))
+
+            width = xbr - xtl
+            height = ybr - ytl
+            cx = xtl + width / 2
+            cy = ytl + height / 2
+
+            boxes.setdefault(label_name, []).append({
+                "label": label_name,
+                "xtl": xtl, "ytl": ytl,
+                "xbr": xbr, "ybr": ybr,
+                "w": width, "h": height,
+                "cx": cx, "cy": cy,
+                "rotation": rotation
+            })
+
+    print(f"📦 Загружена разметка для полей: {list(boxes.keys())}")
     return boxes
 
 
 def generate_data():
+    """Генерирует случайные данные для одного паспорта"""
     is_male = random.choice([True, False])
-    surname = fake.last_name()
+    surname = fake.last_name_male() if is_male else fake.last_name_female()
     name = fake.first_name_male() if is_male else fake.first_name_female()
-
-    # ✅ ПРАВИЛЬНОЕ отчество
     patronymic = random.choice(male_patronymics if is_male else female_patronymics)
 
     return {
         'surname': surname,
         'name': name,
-        'patronymic': patronymic,  # "Сергеевна", "Иванович"
-        'issued_by': f"ОВД УВД по {random.choice(['Ленинскому району г.Москвы', 'Центральному району'])}",
-        'issue_date': fake.date_between('-3y', '-1y').strftime('%d.%m.%Y'),
-        'department_code': f"{random.randint(770, 779):03d}-{random.randint(40, 85):02d}",
-        'passport_series': f"45{random.randint(10, 99):02d}",
-        'passport_number': f"{random.randint(100, 599):03d} {random.randint(100, 999):03d}",
-        'sex': 'М' if is_male else 'Ж',
-        'birth_date': fake.date_of_birth(minimum_age=20, maximum_age=45).strftime('%d.%m.%Y'),
-        'birth_place': f"{fake.city()} обл."
+        'patronymic': patronymic,
+        'issued_by': f"ОУФМС РОССИИ ПО {random.choice(['ГОР. МОСКВЕ', 'МОСКОВСКОЙ ОБЛ.'])} В {random.choice(['ЦАО', 'ЗАО', 'СВАО'])}",
+        'issue_date': fake.date_between('-10y', '-1y').strftime('%d.%m.%Y'),
+        'department_code': f"{random.randint(100, 999):03d}-{random.randint(100, 999):03d}",
+        'passport_series': f"{random.randint(10, 99):02d} {random.randint(10, 99):02d}",
+        'passport_number': f"{random.randint(100000, 999999):06d}",
+        'sex': 'МУЖ.' if is_male else 'ЖЕН.',
+        'birth_date': fake.date_of_birth(minimum_age=14, maximum_age=60).strftime('%d.%m.%Y'),
+        'birth_place': f"ГОР. {fake.city().upper()}"
     }
 
-def needs_rotation(label):
-    """🔄 Поворот ТОЛЬКО для серии/номера"""
-    return 'passport' in label.lower()
+
+_cached_font_path = None
+
+def find_font():
+    """
+    Находит подходящий шрифт TrueType в системе и кэширует путь.
+    """
+    global _cached_font_path
+    if _cached_font_path and os.path.exists(_cached_font_path):
+        return _cached_font_path
+
+    font_paths = [
+        # Windows
+        "C:/Windows/Fonts/arialbd.ttf",
+        "C:/Windows/Fonts/arial.ttf",
+        # Linux
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+        "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",
+        "/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf",
+        "/usr/share/fonts/TTF/DejaVuSans-Bold.ttf",
+        # macOS
+        "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+        "/System/Library/Fonts/Supplemental/Arial.ttf"
+    ]
+
+    for path in font_paths:
+        if os.path.exists(path):
+            _cached_font_path = path
+            print(f"✅ Найден и используется шрифт: {path}")
+            return path
+
+    raise RuntimeError(
+        "Не удалось найти подходящий шрифт TrueType. "
+        "Убедитесь, что у вас установлен один из стандартных шрифтов (Arial, DejaVu Sans, etc.) "
+        "или обновите список font_paths в функции find_font()."
+    )
 
 
-def draw_text_simple(draw, x, y, text, font):
-    """Прямой текст"""
-    draw.text((x + 1, y + 1), text, font=font, fill=(110, 110, 110, 255))
-    draw.text((x, y), text, font=font, fill=(0, 0, 0, 255))
+def get_font_for_box(box, is_vertical=False, max_font_size=42):
+    """Подбирает размер шрифта под высоту/ширину бокса"""
+    box_limit = box['w'] if is_vertical else box['h']
+
+    # Эвристика: шрифт ~65% от высоты строки
+    target_size = int(box_limit * 0.65)
+    target_size = min(target_size, max_font_size)
+    target_size = max(target_size, 10)
+
+    font_path = find_font()
+    return ImageFont.truetype(font_path, target_size)
 
 
-def draw_text_rotated(img, box, text, font):
-    """✅ ПОВОРОТ 110° ВПРАВО (по часовой стрелке)"""
+def draw_rotated_text(img, box, text, color=(0, 0, 0)):
+    """Рисует текст с учетом вращения и специфики паспорта (вертикальный номер)"""
+    is_vertical_field = 'passport' in box['label'].lower()
 
-    txt_size = (300, 80)
-    txt_img = Image.new('RGBA', txt_size, (0, 0, 0, 0))
-    txt_draw = ImageDraw.Draw(txt_img)
+    font = get_font_for_box(box, is_vertical=is_vertical_field)
 
-    bbox = txt_draw.textbbox((0, 0), text, font=font)
-    tx = (txt_size[0] - (bbox[2] - bbox[0])) // 2
-    ty = (txt_size[1] - (bbox[3] - bbox[1])) // 2
+    # Создаем временный слой большого размера, чтобы текст при вращении не обрезался
+    temp_dim = int(max(box['w'], box['h']) * 2.5)
+    txt_layer = Image.new('RGBA', (temp_dim, temp_dim), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(txt_layer)
 
-    # Тень + текст
-    txt_draw.text((tx + 1, ty + 1), text, font=font, fill=(100, 100, 100, 255))
-    txt_draw.text((tx, ty), text, font=font, fill=(0, 0, 0, 255))
-
-    # 🔄 ВПРАВО = ОТРИЦАТЕЛЬНЫЙ угол (-110°)
-    rotated = txt_img.rotate(-90, expand=True, resample=Image.BICUBIC)
-
-    paste_x = int(box['cx'] - rotated.width / 2)
-    paste_y = int(box['cy'] - rotated.height / 2)
-
-    img.paste(rotated, (paste_x, paste_y), rotated)
-    print(f"🔄 '{text}' ВПРАВО -110° → ({paste_x},{paste_y})")
-    return paste_x, paste_y
-
-
-def fill_template(template_path, boxes, data):
-    img = Image.open(template_path).convert('RGBA')
-    draw = ImageDraw.Draw(img)  # 🔥 ГЛОБАЛЬНЫЙ draw
-
-    # Фикс 14px
+    # Определяем размер текста и центрируем его на временном слое
     try:
-        font = ImageFont.truetype("C:/Windows/Fonts/arialbd.ttf", 14)
-    except:
-        font = ImageFont.load_default()
+        text_bbox = draw.textbbox((0, 0), text, font=font)
+        text_w = text_bbox[2] - text_bbox[0]
+        text_h = text_bbox[3] - text_bbox[1]
+    except TypeError: # Pillow < 10.0
+        text_w, text_h = draw.textsize(text, font=font)
 
-    print(f"📐 {img.size}")
 
-    for label, bboxes in boxes.items():
-        if label in data:
-            text = data[label]
+    draw.text(((temp_dim - text_w) / 2, (temp_dim - text_h) / 2), text, font=font, fill=color + (255,))
 
-            for i, box in enumerate(bboxes):
-                xtl, ytl, xbr, ybr = int(box['xtl']), int(box['ytl']), int(box['xbr']), int(box['ybr'])
+    # CVAT rotation - по часовой стрелке (CW). PIL rotation - против часовой (CCW).
+    # Поэтому для компенсации берем отрицательное значение.
+    pil_rotation_angle = -box['rotation']
 
-                # 📍 Левый край
-                x = xtl + 2
+    # Для вертикальных полей (серия/номер) нужен дополнительный поворот
+    if is_vertical_field:
+        pil_rotation_angle -= 90
 
-                # 📏 Нижняя граница bbox
-                text_bbox = draw.textbbox((0, 0), text, font=font)
-                baseline_y = text_bbox[3]
-                y = ybr - baseline_y
+    # Вращаем слой с текстом
+    rotated_txt = txt_layer.rotate(pil_rotation_angle, resample=Image.BICUBIC, expand=True)
 
-                if 'passport' in label.lower():
-                    # 🔄 ПОВОРОТ серия/номер -110° ВПРАВО
-                    txt_img = Image.new('RGBA', (300, 60), (0, 0, 0, 0))
-                    txt_draw = ImageDraw.Draw(txt_img)
-                    txt_draw.text((2, 1), text, font=font, fill=(110, 110, 110, 255))
-                    txt_draw.text((0, 0), text, font=font, fill=(0, 0, 0, 255))
-                    rotated = txt_img.rotate(-110, expand=True)
+    # Вставляем повернутый текст в исходное изображение, центрируя по центру исходного бокса
+    paste_x = int(box['cx'] - rotated_txt.width / 2)
+    paste_y = int(box['cy'] - rotated_txt.height / 2)
 
-                    paste_x = int((xtl + xbr) / 2 - rotated.width / 2)
-                    paste_y = int((ytl + ybr) / 2 - rotated.height / 2)
+    img.paste(rotated_txt, (paste_x, paste_y), rotated_txt)
 
-                    img.paste(rotated, (paste_x, paste_y), rotated)
-                    print(f"🔄 {label}#{i + 1}: '{text}' -110° ({paste_x},{paste_y})")
-                else:
-                    # ➤ ПРЯМОЙ текст
-                    draw.text((x + 1, y + 1), text, font=font, fill=(110, 110, 110, 255))
-                    draw.text((x, y), text, font=font, fill=(0, 0, 0, 255))
-                    print(f"➤ {label}: '{text}' ({x},{y}) ybr={ybr}")
 
-    output = f'generated/FIXED_{int(datetime.now().timestamp())}.png'
-    os.makedirs('generated', exist_ok=True)
-    img.save(output, quality=98)
-    print(f"✅ БЕЗ ОШИБОК: {output}")
-    return output
+def fill_template(template_path, boxes, output_dir, file_prefix, count_idx):
+    """Создает одно изображение паспорта"""
+    data = generate_data()
+
+    try:
+        img = Image.open(template_path).convert('RGBA')
+    except FileNotFoundError:
+        print(f"❌ Ошибка: Шаблон {template_path} не найден!")
+        return
+
+    text_color = (35, 30, 30)  # Темно-серый
+    red_color = (35, 30, 30)  # Красный для номера
+
+    for label_name, bboxes in boxes.items():
+        if label_name in data:
+            value = str(data[label_name]) # Убедимся, что значение - строка
+            color = red_color if 'passport' in label_name else text_color
+
+            for box in bboxes:
+                draw_rotated_text(img, box, value, color)
+
+    # Генерация имени файла
+    timestamp = int(datetime.now().timestamp())
+    filename = f"{file_prefix}_{timestamp}_{count_idx + 1}.png"
+    save_path = os.path.join(output_dir, filename)
+
+    img.convert('RGB').save(save_path, quality=95)
+    print(f"✅ [{count_idx + 1}] Сохранено: {save_path}")
 
 
 if __name__ == "__main__":
-    boxes = parse_cvat_xml('annotations.xml')
-    data = generate_data()
-    fill_template('Sloi-1.jpg', boxes, data)
+    parser = argparse.ArgumentParser(description="Генератор синтетических паспортов")
+    parser.add_argument('--count', type=int, default=1, help='Количество генерируемых изображений (по умолчанию 1)')
+    parser.add_argument('--template', type=str, default='Sloi-1.jpg', help='Путь к файлу шаблона (картинке)')
+    parser.add_argument('--xml', type=str, default='annotations.xml', help='Путь к файлу разметки CVAT XML')
+    parser.add_argument('--out', type=str, default='generated', help='Папка для сохранения результатов')
+
+    args = parser.parse_args()
+
+    # Создаем папку вывода
+    os.makedirs(args.out, exist_ok=True)
+
+    try:
+        # Парсим XML один раз
+        boxes_data = parse_cvat_xml(args.xml)
+
+        if not boxes_data:
+            print("⚠️ Внимание: В XML файле не найдено ни одного бокса.")
+        else:
+            # Находим шрифт один раз перед циклом
+            find_font()
+            print(f"🚀 Начинаем генерацию {args.count} шт...")
+            for i in range(args.count):
+                fill_template(args.template, boxes_data, args.out, "passport", i)
+
+            print("🎉 Генерация завершена!")
+
+    except Exception as e:
+        print(f"❌ Произошла критическая ошибка: {e}")

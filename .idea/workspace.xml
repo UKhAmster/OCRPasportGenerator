@@ -4,32 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bbbe8ea0-8c1e-4124-9779-14538ca9d6de" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/annotations1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/annotations2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/BadScript-Regular.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/Caveat-Bold.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/Caveat-Medium.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/Caveat-Regular.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/Caveat-SemiBold.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/Caveat-VariableFont_wght.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/Lemon Tuesday.otf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/MarckScript-Regular.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/Propisi Cyr Lat_2.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/eskal_font4you.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gen2_birth_certificates.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/handwritten.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img_1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="bbbe8ea0-8c1e-4124-9779-14538ca9d6de" name="Changes" comment="ready to use">
+      <change afterPath="$PROJECT_DIR$/augmentor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/xmlexporter.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/xmlexporter.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gen1_passports.py" beforeDir="false" afterPath="$PROJECT_DIR$/gen1_passports.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generated/FIXED_1769775125.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/generated/FIXED_1769775245.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/generated/fit_bbox_1769773565.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/generated/fit_bbox_1769773657.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/generated/fit_bbox_1769773790.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen2_birth_certificates.py" beforeDir="false" afterPath="$PROJECT_DIR$/gen2_birth_certificates.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handwritten.py" beforeDir="false" afterPath="$PROJECT_DIR$/handwritten.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,16 +100,29 @@
       <updated>1769761588255</updated>
       <workItem from="1770796982799" duration="8000" />
       <workItem from="1770796998101" duration="444000" />
-      <workItem from="1770797459623" duration="4051000" />
+      <workItem from="1770797459623" duration="10196000" />
     </task>
+    <task id="LOCAL-00001" summary="ready to use">
+      <option name="closed" value="true" />
+      <created>1770808423727</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1770808423727</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="ready to use" />
+    <option name="LAST_COMMIT_MESSAGE" value="ready to use" />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/OCRPasportGenerator$gen1_passports.coverage" NAME="gen1_passports Coverage Results" MODIFIED="1770798919700" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/OCRPasportGenerator$gen2_birth_certificates.coverage" NAME="gen2_birth_certificates Coverage Results" MODIFIED="1770808364264" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/OCRPasportGenerator$handwritten.coverage" NAME="handwritten Coverage Results" MODIFIED="1770803247026" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/OCRPasportGenerator$gen1_passports.coverage" NAME="gen1_passports Coverage Results" MODIFIED="1770816149801" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/OCRPasportGenerator$gen2_birth_certificates.coverage" NAME="gen2_birth_certificates Coverage Results" MODIFIED="1770816161197" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/OCRPasportGenerator$handwritten.coverage" NAME="handwritten Coverage Results" MODIFIED="1770816180638" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

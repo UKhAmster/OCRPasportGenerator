@@ -1,7 +1,9 @@
 import os
 import random
+import argparse
 import xml.etree.ElementTree as ET
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
+from PIL import Image, ImageDraw, ImageFont
+from augmentor import ImageAugmentor
 
 
 class PassportGenerator:
@@ -16,7 +18,7 @@ class PassportGenerator:
                       if f.lower().endswith(('.ttf', '.otf'))]
 
         if not self.fonts:
-            print(f"[Warning] Нет шрифтов в {fonts_dir}!")
+            raise IOError(f"Не найдено шрифтов в папке: {fonts_dir}")
 
         self.fields = self._parse_cvat_xml(xml_path)
 
@@ -28,7 +30,6 @@ class PassportGenerator:
 
         def calc_metrics(xmin, ymin, xmax, ymax):
             height = ymax - ymin
-            # Важно: запоминаем центр и нижнюю границу (baseline)
             return {
                 "x": xmin,
                 "y_center": ymin + height / 2,
@@ -52,18 +53,16 @@ class PassportGenerator:
         return fields
 
     def _get_black_ink_color(self):
-        # Темный, насыщенный цвет (имитация гелевой или шариковой ручки)
         base = random.randint(0, 30)
         return (
             base + random.randint(0, 10),
             base + random.randint(0, 10),
             base + random.randint(0, 20),
-            random.randint(220, 255)  # Почти непрозрачный
+            random.randint(220, 255)
         )
 
     def generate_fake_data(self):
         data = {}
-        # Данные капсом, как в паспорте
         streets = ["ЛЕНИНА", "МИРА", "САДОВАЯ", "ЖУКОВА", "ПУШКИНА"]
         cities = ["МОСКВА", "ХИМКИ", "ОДИНЦОВО", "ЛЮБЕРЦЫ"]
 
@@ -77,62 +76,63 @@ class PassportGenerator:
         if "apart_nmb" in self.fields: data["apart_nmb"] = str(random.randint(1, 150))
         return data
 
-    def render(self, filename_prefix="passport"):
+    def render(self, augmentor, apply_aug_prob, filename_prefix="handwritten"):
         img = Image.open(self.template_path).convert("RGBA")
         txt_layer = Image.new("RGBA", img.size, (255, 255, 255, 0))
         draw = ImageDraw.Draw(txt_layer)
 
         data = self.generate_fake_data()
-        font_path = random.choice(self.fonts) if self.fonts else None
+        font_path = random.choice(self.fonts)
         ink_color = self._get_black_ink_color()
 
         for label, coords in self.fields.items():
             if label not in data or not data[label]: continue
-
             text = data[label]
-
-            # --- ЛОГИКА РАЗМЕРА (КЛЮЧЕВОЕ ИЗМЕНЕНИЕ) ---
-            # Базовый коэффициент увеличения относительно высоты бокса
-            size_multiplier = 1.5
-
-            # Для крупных полей (Регион, Город) делаем шрифт еще больше
-            if label in ["Region", "city", "District", "street"]:
-                size_multiplier = 1.2
-            elif label in ["house_number", "korpus", "stroenie", "apart_nmb"]:
+            size_multiplier = 1.2
+            if label in ["house_number", "korpus", "stroenie", "apart_nmb"]:
                 size_multiplier = 1.6
-
             font_size = int(coords['h'] * size_multiplier)
-
-            if font_path:
-                font = ImageFont.truetype(font_path, font_size)
-            else:
-                font = ImageFont.load_default()
-
-            # --- ЛОГИКА ПОЗИЦИИ ---
-            # Смещаем текст, чтобы он визуально стоял на строке, а не висел в воздухе.
-            # coords['y_bottom'] - это нижняя черта.
-            # Поднимаем текст примерно на 80% от размера шрифта вверх от черты.
+            font = ImageFont.truetype(font_path, font_size)
             x = coords['x'] + random.randint(0, 10)
             y = coords['y_bottom'] - (font_size * 0.75) + random.randint(-5, 5)
-
             draw.text((x, y), text, font=font, fill=ink_color)
 
-        # Легкий блюр для слияния с бумагой
-        txt_layer = txt_layer.filter(ImageFilter.GaussianBlur(radius=0.4))
-        final_img = Image.alpha_composite(img, txt_layer)
+        # Слияние текста с шаблоном
+        final_img = Image.alpha_composite(img, txt_layer).convert("RGB")
 
-        save_path = os.path.join(self.output_dir, f"{filename_prefix}_{random.randint(100, 999)}.jpg")
-        final_img.convert("RGB").save(save_path, "JPEG", quality=95)
-        print(f"Saved optimized sample: {save_path}")
+        # Применение аугментации с заданной вероятностью
+        if random.random() < apply_aug_prob:
+            final_img = augmentor.process(final_img)
+            print(f"    ✨ Аугментация применена.")
 
 
-# Запуск
+        save_path = os.path.join(self.output_dir, f"{filename_prefix}_{random.randint(1000, 9999)}.jpg")
+        final_img.save(save_path, "JPEG", quality=random.randint(85, 98))
+        print(f"Saved sample: {save_path}")
+
+
 if __name__ == "__main__":
-    # Убедись, что пути верные
-    gen = PassportGenerator(
-        template_path="img.png",
-        xml_path="annotations1.xml",
-        fonts_dir="fonts"
-    )
-    for i in range(1):
-        gen.render(f"big_text_{i}")
+    parser = argparse.ArgumentParser(description="Генератор рукописных данных в паспорте.")
+    parser.add_argument('--count', type=int, default=5, help='Количество изображений для генерации.')
+    parser.add_argument('--template', type=str, default='img.png', help='Путь к файлу шаблона.')
+    parser.add_argument('--xml', type=str, default='annotations1.xml', help='Путь к файлу разметки CVAT XML.')
+    parser.add_argument('--fonts', type=str, default='fonts', help='Папка со шрифтами.')
+    parser.add_argument('--out', type=str, default='generated', help='Папка для сохранения результатов.')
+    parser.add_argument('--aug-prob', type=float, default=1/3, help='Вероятность применения всего набора аугментаций к изображению.')
+    parser.add_argument('--aug-internal-prob', type=float, default=0.7, help='Вероятность применения каждого отдельного искажения внутри аугментатора.')
+    args = parser.parse_args()
+
+    try:
+        augmentor = ImageAugmentor(probability=args.aug_internal_prob)
+        gen = PassportGenerator(
+            template_path=args.template,
+            xml_path=args.xml,
+            fonts_dir=args.fonts,
+            output_dir=args.out
+        )
+        print(f"🚀 Начинаем генерацию {args.count} рукописных образцов...")
+        for i in range(args.count):
+            gen.render(augmentor, args.aug_prob, f"handwritten_{i}")
+        print("🎉 Генерация завершена!")
+    except Exception as e:
+        print(f"❌ Произошла критическая ошибка: {e}")

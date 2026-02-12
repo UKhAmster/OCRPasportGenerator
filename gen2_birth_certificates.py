@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from PIL import Image, ImageDraw, ImageFont
 from faker import Faker
 from num2words import num2words
+from augmentor import ImageAugmentor
 
 # --- Configuration ---
 fake = Faker('ru_RU')
@@ -161,7 +162,7 @@ def draw_rotated_text(img, box, text, color=(0, 0, 0)):
 
 # --- Main Execution ---
 
-def fill_template(template_path, boxes, output_dir, file_prefix, count_idx):
+def fill_template(template_path, boxes, output_dir, file_prefix, count_idx, augmentor, apply_aug_prob):
     data = generate_birth_certificate_data()
     try:
         img = Image.open(template_path).convert('RGBA')
@@ -176,9 +177,16 @@ def fill_template(template_path, boxes, output_dir, file_prefix, count_idx):
             for box in bboxes:
                 draw_rotated_text(img, box, value, text_color)
 
+    img = img.convert('RGB')
+
+    # Применяем аугментацию с заданной вероятностью
+    if random.random() < apply_aug_prob:
+        img = augmentor.process(img)
+        print(f"    ✨ Аугментация применена.")
+
     filename = f"{file_prefix}_{int(datetime.now().timestamp())}_{count_idx + 1}.png"
     save_path = os.path.join(output_dir, filename)
-    img.convert('RGB').save(save_path, quality=95)
+    img.save(save_path, quality=95)
     print(f"✅ [{count_idx + 1}] Сохранено: {save_path}")
 
 if __name__ == "__main__":
@@ -187,10 +195,15 @@ if __name__ == "__main__":
     parser.add_argument('--template', type=str, default='img_1.png', help='Путь к шаблону')
     parser.add_argument('--xml', type=str, default='annotations2.xml', help='Путь к CVAT XML')
     parser.add_argument('--out', type=str, default='generated', help='Папка для сохранения')
+    parser.add_argument('--aug-prob', type=float, default=1/3, help='Вероятность применения всего набора аугментаций к изображению.')
+    parser.add_argument('--aug-internal-prob', type=float, default=0.7, help='Вероятность применения каждого отдельного искажения внутри аугментатора.')
     args = parser.parse_args()
 
     os.makedirs(args.out, exist_ok=True)
     try:
+        # Инициализируем аугментатор
+        augmentor = ImageAugmentor(probability=args.aug_internal_prob)
+
         boxes_data = parse_cvat_polygon_xml(args.xml)
         if not boxes_data:
             print("⚠️ В XML не найдено ни одного полигона.")
@@ -198,7 +211,7 @@ if __name__ == "__main__":
             find_font()
             print(f"🚀 Начинаем генерацию {args.count} шт...")
             for i in range(args.count):
-                fill_template(args.template, boxes_data, args.out, "cert", i)
+                fill_template(args.template, boxes_data, args.out, "cert", i, augmentor, args.aug_prob)
             print("🎉 Генерация завершена!")
     except Exception as e:
         print(f"❌ Произошла критическая ошибка: {e}")

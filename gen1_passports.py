@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 from faker import Faker
+from augmentor import ImageAugmentor
 
 # Настройка Faker
 fake = Faker('ru_RU')
@@ -167,7 +168,7 @@ def draw_rotated_text(img, box, text, color=(0, 0, 0)):
     img.paste(rotated_txt, (paste_x, paste_y), rotated_txt)
 
 
-def fill_template(template_path, boxes, output_dir, file_prefix, count_idx):
+def fill_template(template_path, boxes, output_dir, file_prefix, count_idx, augmentor, apply_aug_prob):
     """Создает одно изображение паспорта"""
     data = generate_data()
 
@@ -188,12 +189,20 @@ def fill_template(template_path, boxes, output_dir, file_prefix, count_idx):
             for box in bboxes:
                 draw_rotated_text(img, box, value, color)
 
+    img = img.convert('RGB')
+
+    # Применяем аугментацию с заданной вероятностью
+    if random.random() < apply_aug_prob:
+        img = augmentor.process(img)
+        print(f"    ✨ Аугментация применена.")
+
+
     # Генерация имени файла
     timestamp = int(datetime.now().timestamp())
     filename = f"{file_prefix}_{timestamp}_{count_idx + 1}.png"
     save_path = os.path.join(output_dir, filename)
 
-    img.convert('RGB').save(save_path, quality=95)
+    img.save(save_path, quality=95)
     print(f"✅ [{count_idx + 1}] Сохранено: {save_path}")
 
 
@@ -203,6 +212,9 @@ if __name__ == "__main__":
     parser.add_argument('--template', type=str, default='Sloi-1.jpg', help='Путь к файлу шаблона (картинке)')
     parser.add_argument('--xml', type=str, default='annotations.xml', help='Путь к файлу разметки CVAT XML')
     parser.add_argument('--out', type=str, default='generated', help='Папка для сохранения результатов')
+    parser.add_argument('--aug-prob', type=float, default=1/3, help='Вероятность применения всего набора аугментаций к изображению.')
+    parser.add_argument('--aug-internal-prob', type=float, default=0.7, help='Вероятность применения каждого отдельного искажения внутри аугментатора.')
+
 
     args = parser.parse_args()
 
@@ -210,6 +222,9 @@ if __name__ == "__main__":
     os.makedirs(args.out, exist_ok=True)
 
     try:
+        # Инициализируем аугментатор с внутренней вероятностью
+        augmentor = ImageAugmentor(probability=args.aug_internal_prob)
+
         # Парсим XML один раз
         boxes_data = parse_cvat_xml(args.xml)
 
@@ -220,7 +235,7 @@ if __name__ == "__main__":
             find_font()
             print(f"🚀 Начинаем генерацию {args.count} шт...")
             for i in range(args.count):
-                fill_template(args.template, boxes_data, args.out, "passport", i)
+                fill_template(args.template, boxes_data, args.out, "passport", i, augmentor, args.aug_prob)
 
             print("🎉 Генерация завершена!")
 

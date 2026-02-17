@@ -208,7 +208,7 @@ def fill_template(template_path, boxes, output_dir, file_prefix, count_idx, augm
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Генератор синтетических паспортов")
-    parser.add_argument('--count', type=int, default=1, help='Количество генерируемых изображений (по умолчанию 1)')
+    parser.add_argument('--count', type=int, default=5, help='Количество генерируемых изображений (по умолчанию 1)')
     parser.add_argument('--template', type=str, default='Sloi-1.jpg', help='Путь к файлу шаблона (картинке)')
     parser.add_argument('--xml', type=str, default='annotations.xml', help='Путь к файлу разметки CVAT XML')
     parser.add_argument('--out', type=str, default='generated', help='Папка для сохранения результатов')

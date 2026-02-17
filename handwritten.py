@@ -1,6 +1,7 @@
 import os
 import random
 import argparse
+import json
 import xml.etree.ElementTree as ET
 from PIL import Image, ImageDraw, ImageFont
 from augmentor import ImageAugmentor
@@ -82,33 +83,66 @@ class PassportGenerator:
         draw = ImageDraw.Draw(txt_layer)
 
         data = self.generate_fake_data()
+
+        # Проверка на наличие шрифтов
+        if not self.fonts:
+            raise IOError("Список шрифтов пуст!")
+
         font_path = random.choice(self.fonts)
         ink_color = self._get_black_ink_color()
 
         for label, coords in self.fields.items():
             if label not in data or not data[label]: continue
             text = data[label]
+
+            # Логика размера шрифта
             size_multiplier = 1.2
             if label in ["house_number", "korpus", "stroenie", "apart_nmb"]:
                 size_multiplier = 1.6
+
+            # Безопасный расчет высоты шрифта
             font_size = int(coords['h'] * size_multiplier)
-            font = ImageFont.truetype(font_path, font_size)
+            if font_size <= 0: font_size = 12  # Защита от нулевого размера
+
+            try:
+                font = ImageFont.truetype(font_path, font_size)
+            except Exception as e:
+                print(f"Ошибка шрифта {font_path}: {e}")
+                continue
+
+            # Рандомизация позиции
             x = coords['x'] + random.randint(0, 10)
-            y = coords['y_bottom'] - (font_size * 0.75) + random.randint(-5, 5)
+            # y_bottom - это низ бокса. Поднимаем текст на высоту шрифта + шум
+            y = coords['y_bottom'] - font_size + random.randint(-5, 5)
+
+            # Рисуем текст на прозрачном слое
             draw.text((x, y), text, font=font, fill=ink_color)
 
         # Слияние текста с шаблоном
-        final_img = Image.alpha_composite(img, txt_layer).convert("RGB")
+        final_img = Image.alpha_composite(img, txt_layer).convert("RGB")  # Конвертируем в RGB для JPG
 
         # Применение аугментации с заданной вероятностью
         if random.random() < apply_aug_prob:
             final_img = augmentor.process(final_img)
             print(f"    ✨ Аугментация применена.")
 
+        # --- СОХРАНЕНИЕ (ИЗМЕНЕНО) ---
 
-        save_path = os.path.join(self.output_dir, f"{filename_prefix}_{random.randint(1000, 9999)}.jpg")
-        final_img.save(save_path, "JPEG", quality=random.randint(85, 98))
-        print(f"Saved sample: {save_path}")
+        # Генерируем ID один раз, чтобы он совпал для обоих файлов
+        file_id = random.randint(1000, 9999)
+        base_filename = f"{filename_prefix}_{file_id}"
+
+        # 1. Сохраняем картинку
+        image_path = os.path.join(self.output_dir, f"{base_filename}.jpg")
+        final_img.save(image_path, "JPEG", quality=random.randint(85, 98))
+
+        # 2. Сохраняем JSON (Ground Truth)
+        json_path = os.path.join(self.output_dir, f"{base_filename}.json")
+        with open(json_path, 'w', encoding='utf-8') as f:
+            # ensure_ascii=False позволяет сохранять кириллицу читаемой
+            json.dump(data, f, ensure_ascii=False, indent=4)
+
+        print(f"✅ Saved sample: {image_path} + JSON")
 
 
 if __name__ == "__main__":

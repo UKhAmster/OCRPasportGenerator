@@ -191,7 +191,7 @@ def fill_template(template_path, boxes, output_dir, file_prefix, count_idx, augm
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Генератор свидетельств о рождении")
-    parser.add_argument('--count', type=int, default=1, help='Количество изображений')
+    parser.add_argument('--count', type=int, default=5, help='Количество изображений')
     parser.add_argument('--template', type=str, default='img_1.png', help='Путь к шаблону')
     parser.add_argument('--xml', type=str, default='annotations2.xml', help='Путь к CVAT XML')
     parser.add_argument('--out', type=str, default='generated', help='Папка для сохранения')

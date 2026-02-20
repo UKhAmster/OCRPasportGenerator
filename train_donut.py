@@ -2,6 +2,7 @@ import os
 import json
 import argparse
 import torch
+import glob
 from torch.utils.data import Dataset
 from PIL import Image
 from transformers import DonutProcessor, VisionEncoderDecoderModel, VisionEncoderDecoderConfig
@@ -141,7 +142,17 @@ def main(args):
     )
 
     print(f"🚀 Передаем управление в PyTorch Lightning. Ждем старта эпох...")
-    trainer.fit(module)
+
+    # Ищем последний сохраненный чекпоинт в папке модели
+    latest_checkpoint = None
+    if os.path.exists(checkpoint_dir):
+        checkpoints = glob.glob(os.path.join(checkpoint_dir, "*.ckpt"))
+        if checkpoints:
+            latest_checkpoint = max(checkpoints, key=os.path.getctime)
+            print(f"🔄 Найден чекпоинт: {latest_checkpoint}. Продолжаем обучение!")
+
+    # Запускаем обучение, передавая путь к чекпоинту (если он есть)
+    trainer.fit(module, ckpt_path=latest_checkpoint)
 
     output_model_dir = os.path.join("models_ready", args.name)
     os.makedirs(output_model_dir, exist_ok=True)

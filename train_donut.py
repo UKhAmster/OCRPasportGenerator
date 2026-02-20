@@ -133,6 +133,7 @@ def main(args):
     trainer = Trainer(
         accelerator="gpu",
         devices=1,
+        strategy="single_device",
         max_epochs=args.epochs,
         precision="16-mixed",  # БЕЗОПАСНАЯ ТОЧНОСТЬ
         callbacks=[checkpoint_callback],

@@ -116,6 +116,9 @@ def main(args):
     processor.tokenizer.add_special_tokens({"additional_special_tokens": ["<s_passport>", "<s_registration>"]})
     model.decoder.resize_token_embeddings(len(processor.tokenizer))
 
+    model.config.pad_token_id = processor.tokenizer.pad_token_id
+    model.config.decoder_start_token_id = processor.tokenizer.convert_tokens_to_ids(["<s_passport>"])[0]
+
     module = DonutModule(processor, model, args.lr, args.dataset, args.batch)
 
     checkpoint_dir = os.path.join("checkpoints", args.name)

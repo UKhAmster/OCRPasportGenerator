@@ -134,11 +134,12 @@ def main(args):
     trainer = Trainer(
         accelerator="gpu",
         devices=1,
-        strategy="single_device",
+        ##strategy="single_device",
         max_epochs=args.epochs,
         precision="16-mixed",  # БЕЗОПАСНАЯ ТОЧНОСТЬ
         callbacks=[checkpoint_callback],
-        gradient_clip_val=1.0
+        gradient_clip_val=1.0,
+        num_sanity_val_steps=0
     )
 
     print(f"🚀 Передаем управление в PyTorch Lightning. Ждем старта эпох...")

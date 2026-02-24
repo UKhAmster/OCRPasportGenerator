@@ -58,34 +58,52 @@ def evaluate(model_path, dataset_path, task_prompt):
                 use_cache=True,
                 bad_words_ids=[[processor.tokenizer.unk_token_id]],
                 return_dict_in_generate=True,
+                repetition_penalty=1.2,
+                num_beams=2
             )
 
-        # 1. Получаем сырую строку с тегами
-        sequence = processor.batch_decode(outputs.sequences)[0]
-        sequence = sequence.replace(processor.tokenizer.eos_token, "").replace(processor.tokenizer.pad_token, "")
-        sequence = re.sub(r"^" + re.escape(task_prompt), "", sequence).strip()
+            # 1. Получаем сырую строку
+            sequence = processor.batch_decode(outputs.sequences)[0]
+            sequence = sequence.replace(processor.tokenizer.eos_token, "").replace(processor.tokenizer.pad_token, "")
+            sequence = re.sub(r"^" + re.escape(task_prompt), "", sequence).strip()
 
-        # 2. Магия: превращаем теги модели обратно в словарь!
-        predicted_dict = processor.token2json(sequence)
+            # 2. Пытаемся получить словарь
+            predicted_dict = processor.token2json(sequence)
 
-        # 3. Считаем метрики (сравниваем строковые репрезентации словарей для CER)
-        truth_str = json.dumps(ground_truth_dict, sort_keys=True, ensure_ascii=False)
-        pred_str = json.dumps(predicted_dict, sort_keys=True, ensure_ascii=False)
+            # ЕСЛИ МОДЕЛЬ ВЫДАЛА СЫРОЙ JSON (как в твоем логе), чистим и парсим его напрямую:
+            if "text_sequence" in predicted_dict:
+                raw_text = predicted_dict["text_sequence"]
+                # Пытаемся вырезать всё лишнее и оставить только сам словарь
+                try:
+                    # Ищем структуру {"gt_parse": {...}}
+                    match = re.search(r'{"gt_parse":\s*({.*?})}', raw_text)
+                    if match:
+                        predicted_dict = json.loads(match.group(1))
+                    else:
+                        # Если совсем мусор
+                        predicted_dict = {"error": raw_text}
+                except json.JSONDecodeError:
+                    predicted_dict = {"error": "JSON_Decode_Error"}
 
-        current_cer = cer(truth_str, pred_str)
-        total_cer += current_cer
+            # 3. Считаем метрики
+            truth_str = json.dumps(ground_truth_dict, sort_keys=True, ensure_ascii=False)
+            pred_str = json.dumps(predicted_dict, sort_keys=True, ensure_ascii=False)
 
-        if ground_truth_dict == predicted_dict:
-            exact_matches += 1
-            status = "✅ ИДЕАЛЬНО"
-        else:
-            status = f"❌ ОШИБКА (CER: {current_cer:.2f})"
+            current_cer = cer(truth_str, pred_str)
+            total_cer += current_cer
 
-        print(f"[{idx + 1}/{total_images}] {item['file_name']} | {status}")
-        # Если интересно смотреть, где модель ошибается, раскомментируй строки ниже:
-        # if ground_truth_dict != predicted_dict:
-        #     print(f"   Ожидалось: {truth_str}")
-        #     print(f"   Получено:  {pred_str}")
+            if ground_truth_dict == predicted_dict:
+                exact_matches += 1
+                status = "✅ ИДЕАЛЬНО"
+            else:
+                status = f"❌ ОШИБКА (CER: {current_cer:.2f})"
+
+            print(f"[{idx + 1}/{total_images}] {item['file_name']} | {status}")
+
+            if ground_truth_dict != predicted_dict:
+                print(f"   Ожидалось: {truth_str}")
+                print(f"   Получено:  {pred_str}")
+                break  # Тормозим на первой ошибке
 
     # Финальные результаты
     avg_cer = total_cer / total_images

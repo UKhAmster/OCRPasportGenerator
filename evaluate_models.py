@@ -7,12 +7,14 @@ from PIL import Image
 from transformers import DonutProcessor, VisionEncoderDecoderModel
 from jiwer import cer
 
+
 def evaluate(model_path, dataset_path, task_prompt):
     print(f"⏳ Загрузка модели из {model_path}...")
     processor = DonutProcessor.from_pretrained(model_path)
     model = VisionEncoderDecoderModel.from_pretrained(model_path)
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"⚡ Устройство: {device}")
     model.to(device)
     model.eval()
 
@@ -31,11 +33,17 @@ def evaluate(model_path, dataset_path, task_prompt):
 
     for idx, item in enumerate(metadata):
         image_path = os.path.join(dataset_path, item["file_name"])
-        ground_truth = item["ground_truth"]
 
-        image = Image.open(image_path).convert("RGB")
+        # Достаем идеальный словарь из твоей метадаты
+        ground_truth_dict = json.loads(item["ground_truth"])["gt_parse"]
+
+        try:
+            image = Image.open(image_path).convert("RGB")
+        except Exception as e:
+            print(f"❌ Ошибка загрузки {image_path}: {e}")
+            continue
+
         pixel_values = processor(image, return_tensors="pt").pixel_values.to(device)
-
         decoder_input_ids = processor.tokenizer(
             task_prompt, add_special_tokens=False, return_tensors="pt"
         ).input_ids.to(device)
@@ -52,31 +60,45 @@ def evaluate(model_path, dataset_path, task_prompt):
                 return_dict_in_generate=True,
             )
 
-        # Декодируем и очищаем прогноз
-        prediction = processor.batch_decode(outputs.sequences)[0]
-        prediction = prediction.replace(processor.tokenizer.eos_token, "").replace(processor.tokenizer.pad_token, "")
-        prediction = re.sub(r"^" + re.escape(task_prompt), "", prediction).strip()
+        # 1. Получаем сырую строку с тегами
+        sequence = processor.batch_decode(outputs.sequences)[0]
+        sequence = sequence.replace(processor.tokenizer.eos_token, "").replace(processor.tokenizer.pad_token, "")
+        sequence = re.sub(r"^" + re.escape(task_prompt), "", sequence).strip()
 
-        # Считаем метрики
-        current_cer = cer(ground_truth, prediction)
+        # 2. Магия: превращаем теги модели обратно в словарь!
+        predicted_dict = processor.token2json(sequence)
+
+        # 3. Считаем метрики (сравниваем строковые репрезентации словарей для CER)
+        truth_str = json.dumps(ground_truth_dict, sort_keys=True, ensure_ascii=False)
+        pred_str = json.dumps(predicted_dict, sort_keys=True, ensure_ascii=False)
+
+        current_cer = cer(truth_str, pred_str)
         total_cer += current_cer
 
-        if ground_truth == prediction:
+        if ground_truth_dict == predicted_dict:
             exact_matches += 1
+            status = "✅ ИДЕАЛЬНО"
+        else:
+            status = f"❌ ОШИБКА (CER: {current_cer:.2f})"
 
-        print(f"[{idx+1}/{total_images}] Обработан: {item['file_name']} | CER: {current_cer:.4f}")
+        print(f"[{idx + 1}/{total_images}] {item['file_name']} | {status}")
+        # Если интересно смотреть, где модель ошибается, раскомментируй строки ниже:
+        # if ground_truth_dict != predicted_dict:
+        #     print(f"   Ожидалось: {truth_str}")
+        #     print(f"   Получено:  {pred_str}")
 
     # Финальные результаты
     avg_cer = total_cer / total_images
     accuracy = (exact_matches / total_images) * 100
 
-    print("\n" + "="*50)
+    print("\n" + "=" * 50)
     print(f"📊 РЕЗУЛЬТАТЫ ВАЛИДАЦИИ ({dataset_path})")
-    print("="*50)
+    print("=" * 50)
     print(f"Всего изображений: {total_images}")
-    print(f"Идеальных совпадений (Exact Match): {accuracy:.2f}%")
-    print(f"Средняя ошибка по символам (Average CER): {avg_cer:.4f} (ближе к 0 = лучше)")
-    print("="*50 + "\n")
+    print(f"Идеальных совпадений (Точность): {accuracy:.2f}%")
+    print(f"Средняя ошибка по символам (CER): {avg_cer:.4f} (ближе к 0 = лучше)")
+    print("=" * 50 + "\n")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Массовая валидация моделей")
